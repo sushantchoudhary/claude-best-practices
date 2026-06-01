@@ -81,6 +81,7 @@ npm run build        # Production build
 npm run scaffold:component -- MyComponent   # Create component + test
 npm run audit:tests                          # Find untested files
 npm run validate:types                       # Check frontend/backend type parity
+npm run propose:claude-updates               # Propose repo updates from latest Claude changelog
 ```
 
 ---

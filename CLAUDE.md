@@ -270,6 +270,7 @@ The most powerful workflow — spawn two specialists at once:
 | `scripts/seed-db.ts` | Populate dev database | `npm run db:seed` |
 | `scripts/validate-types.ts` | Check frontend/backend type parity | `npm run validate:types` |
 | `scripts/audit-tests.ts` | Find untested files | `npm run audit:tests` |
+| `scripts/propose-claude-changelog-updates.ts` | Generate prioritized Claude changelog update proposals for this repo | `npm run propose:claude-updates` |
 
 ### Claude Code Agent Prompts
 

@@ -18,7 +18,8 @@
     "scaffold:component": "npx tsx scripts/scaffold-component.ts",
     "validate:types": "npx tsx scripts/validate-types.ts",
     "audit:tests": "npx tsx scripts/audit-tests.ts",
-    "db:seed": "npx tsx scripts/seed-db.ts"
+    "db:seed": "npx tsx scripts/seed-db.ts",
+    "propose:claude-updates": "npx tsx scripts/propose-claude-changelog-updates.ts"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
