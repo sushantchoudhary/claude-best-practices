@@ -1,0 +1,31 @@
+{
+  "name": "claude-code-demo",
+  "version": "1.0.0",
+  "description": "A demo project showcasing Claude Code best practices for AI-assisted development",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
+    "build": "npm run build --workspace=backend && npm run build --workspace=frontend",
+    "test": "npm run test --workspace=backend && npm run test --workspace=frontend",
+    "test:coverage": "npm run test:coverage --workspace=backend && npm run test:coverage --workspace=frontend",
+    "lint": "npm run lint --workspace=backend && npm run lint --workspace=frontend",
+    "lint:fix": "npm run lint:fix --workspace=backend && npm run lint:fix --workspace=frontend",
+    "typecheck": "npm run typecheck --workspace=backend && npm run typecheck --workspace=frontend",
+    "scaffold:component": "npx tsx scripts/scaffold-component.ts",
+    "validate:types": "npx tsx scripts/validate-types.ts",
+    "audit:tests": "npx tsx scripts/audit-tests.ts",
+    "db:seed": "npx tsx scripts/seed-db.ts"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "tsx": "^4.7.1"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

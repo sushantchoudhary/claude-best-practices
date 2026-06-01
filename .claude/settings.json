@@ -1,0 +1,121 @@
+{
+  "model": "claude-sonnet-4-6",
+
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npx tsx *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git checkout *)",
+      "Bash(git branch *)",
+      "Bash(git stash *)",
+      "Bash(node *)",
+      "Bash(cat *)",
+      "Bash(ls *)",
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(echo *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git reset --hard *)",
+      "Bash(git clean -fd*)",
+      "Bash(chmod 777 *)",
+      "Bash(curl * | bash*)",
+      "Bash(wget * | sh*)"
+    ]
+  },
+
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/pre-bash-guard.sh",
+            "timeout": 5,
+            "statusMessage": "Validating command..."
+          }
+        ]
+      }
+    ],
+
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/post-edit-typecheck.sh",
+            "timeout": 30,
+            "async": true,
+            "statusMessage": "Type-checking..."
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/post-edit-lint.sh",
+            "timeout": 30,
+            "async": true,
+            "statusMessage": "Linting..."
+          }
+        ]
+      }
+    ],
+
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Review the work done this session. Check: (1) Do all modified TypeScript files compile without errors? (2) Do all tests still pass? (3) Are there any TODO comments left in changed files that should have been resolved? If any check fails, respond with 'INCOMPLETE: <reason>' to continue working. If all checks pass, respond with 'DONE'.",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+
+    "Notification": [
+      {
+        "matcher": "permission_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[Claude Code] Permission required — check your terminal' | tee -a /tmp/claude-code-demo.log",
+            "async": true
+          }
+        ]
+      }
+    ],
+
+    "PostToolUseFailure": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/log-failure.sh",
+            "async": true,
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+
+  "env": {
+    "NODE_ENV": "development",
+    "CLAUDE_PROJECT": "claude-code-demo"
+  }
+}

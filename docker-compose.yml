@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: .
+      target: build-backend
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      FRONTEND_URL: http://localhost:5173
+    volumes:
+      # Hot reload: mount source, exclude node_modules
+      - ./backend/src:/app/backend/src
+      - /app/backend/node_modules
+    command: ["npx", "tsx", "watch", "src/index.ts"]
+    working_dir: /app/backend
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: .
+      target: deps
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: ""
+    volumes:
+      - ./frontend/src:/app/frontend/src
+      - ./frontend/index.html:/app/frontend/index.html
+      - /app/frontend/node_modules
+    command: ["npx", "vite", "--host", "0.0.0.0"]
+    working_dir: /app/frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+
+# ─── Production stack (run with: docker compose -f docker-compose.yml -f docker-compose.prod.yml up)
+# See docker-compose.prod.yml for production overrides
